@@ -1,0 +1,221 @@
+" see https://github.com/Leivmox/code_2023/blob/master/Share/ideavim/.ideavimrc
+" ================================================================================================
+" = Extensions =====================================
+" ================================================================================================
+" Highlight copied text
+Plug 'machakann/vim-highlightedyank'
+" Commentary plugin
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'preservim/nerdtree'
+" vim-flash
+map s <Action>(flash.search)
+
+" ================================================================================================
+" = Basic settings =====================================
+" ================================================================================================
+set clipboard+=unnamed
+" 滚动时保持上下边距(行),值设置为 999 可以让光标始终居中
+set scrolloff=15
+set history=200
+
+set number
+set relativenumber
+
+" Proper search
+set incsearch
+set ignorecase
+set smartcase
+set gdefault
+
+" Search results centered please
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+
+set keep-english-in-normal " 这里应该是个插件实现的,切换到 normal 模式时, 会自动切换回英文
+
+" Ctrl+j and Ctrl+k as Esc
+" Ctrl-j is a little awkward unfortunately:
+" https://github.com/neovim/neovim/issues/5916
+" So we also map Ctrl+k
+nnoremap <C-j> <Esc>
+inoremap <C-j> <Esc>
+vnoremap <C-j> <Esc>
+snoremap <C-j> <Esc>
+xnoremap <C-j> <Esc>
+cnoremap <C-j> <C-c>
+onoremap <C-j> <Esc>
+lnoremap <C-j> <Esc>
+tnoremap <C-j> <Esc>
+
+nnoremap <C-k> <Esc>
+inoremap <C-k> <Esc>
+vnoremap <C-k> <Esc>
+snoremap <C-k> <Esc>
+xnoremap <C-k> <Esc>
+cnoremap <C-k> <C-c>
+onoremap <C-k> <Esc>
+lnoremap <C-k> <Esc>
+tnoremap <C-k> <Esc>
+
+" Permanent undo
+set undodir=~/.vimdid
+set undofile
+
+" Use wide tabs
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set noexpandtab
+
+noremap H ^
+noremap L $
+
+" force your self use hjkl
+noremap <up> <nop>
+noremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+
+set backspace=4 " Backspace over newlines
+
+" 移动行
+noremap <A-j> :m '>+1<CR>gv=gv
+noremap <A-k> :m '<-2<CR>gv=gv
+inoremap <A-j> :m '>+1<CR>gv=gv
+inoremap <A-k> :m '<-2<CR>gv=gv
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+
+" Show those damn hidden characters
+" Verbose: set listchars=nbsp:¬,eol:¶,extends:»,precedes:«,trail:•
+set listchars=nbsp:¬,extends:»,precedes:«,trail:•
+
+" cursor shape
+let &t_ut=''
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+
+" Jump to last edit position on opening file
+" https://stackoverflow.com/questions/31449496/vim-ignore-specifc-file-in-autocommand
+"au BufReadPost * if expand('%:p') !~# '\m/\.git/' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" 保存代码并格式化
+nmap <leader>w <action>(ReformatCode):w<CR>
+
+" 取消高亮
+noremap <leader>nl :nohlsearch<CR>
+
+" 复制到寄存器 a, 和从寄存器 a 粘贴
+noremap <leader>y "ay
+vnoremap <leader>y "ay
+noremap <leader>p "ap
+vnoremap <leader>p "ap
+
+" 注释
+nmap <C-/> <Action>(CommentByLineComment)
+" 有问题，可以改成使用 ide 的
+nmap <C-S-/> <Action>(CommentByBlockComment)
+
+" 切换 buffer
+nmap <right> :bn<CR>
+nmap <left> :bp<CR>
+
+nmap Y y%
+nmap D d%
+nmap C c%
+
+imap <C-u> <Esc>u
+imap <C-r> <Esc><C-r>
+
+" 逐步选中 TODO
+nmap S <action>(EditorSelectWord)
+nmap <BS> <action>(EditorUnSelectWord)
+
+" 窗口移动
+nmap <C-h> <c-w>h
+nmap <C-j> <c-w>j
+nmap <C-k> <c-w>k
+nmap <C-l> <c-w>l
+
+" ================================================================================================
+" = 编码专属设置 =====================================
+" ================================================================================================
+" 折叠/展开代码
+nmap zc <action>(ExpandRegion)
+nmap za <action>(CollapseRegion)
+
+" 跳转到上/下一个方法
+nmap [[ <action>(MethodUp)
+nmap ]] <action>(MethodDown)
+" 跳转到上/下一个错误
+nmap gE <action>(GotoPrevError)
+nmap ge <action>(GotoNextError)
+nmap gt <action>(GotoTest)
+nmap gi <action>(GotoImplementation)
+nmap go <action>(GotoTypeDeclaration)
+
+" e: Extract
+" extract method/function
+vmap <leader>em <action>(ExtractMethod)
+" extract constant
+vmap <leader>ec <action>(IntroduceConstant)
+" extract field
+vmap <leader>ef <action>(IntroduceField)
+" extract variable
+vmap <leader>ev <action>(IntroduceVariable)
+
+" ================================================================================================
+" = Leader Keymaps =====================================
+" ================================================================================================
+" leader key
+let mapleader=" "
+
+" ================================================================================================
+" 👻👻👻 Which-Key 👻👻👻
+" ================================================================================================
+set which-key
+set notimeout
+
+" f: Find/Format ⭐️
+let g:WhichKeyDesc_FindOrFormat = "<leader>f FindOrFormat"
+let g:WhichKeyDesc_FindOrFormat_FindFile = "<leader>ff FindFile"
+nmap <leader>ff <action>(GotoFile)
+
+let g:WhichKeyDesc_FindOrFormat_FindFileLocation = "<leader>fl FindFileLocation"
+nmap <leader>fl <action>(SelectInProjectView)
+
+let g:WhichKeyDesc_FindOrFormat_FindText = "<leader>ft FindText"
+nmap <leader>ft <action>(FindInPath)
+
+let g:WhichKeyDesc_FindOrFormat_Commands = "<leader>fc Commands"
+nmap <leader>fc <action>(GotoAction)
+
+let g:WhichKeyDesc_FindOrFormat_OpenedProject = "<leader>fp OpenedProject"
+nmap <leader>fp <action>(OpenProjectWindows)
+
+let g:WhichKeyDesc_FindOrFormat_Format = "<leader>fm Format"
+nmap <leader>fm <action>(ReformatCode) \| <action>(OptimizeImports)
+
+
+" n: No ⭐️
+let g:WhichKeyDesc_No_Highlight = "<leader>nl NoHighlight"
+nmap <leader>nl :nohlsearch<CR>
+nmap <Esc> :nohlsearch<CR>
+
+
+" r: Run/Re ⭐️
+let g:WhichKeyDesc_Rename = "<leader>r Rename"
+map <leader>r <action>(RenameElement)
+
+
+" e: Toggle Explorer ⭐️
+let g:WhichKeyDesc_ToggleExplorer = "<leader>e ToggleExplorer"
+nmap <leader>e <action>(ActivateProjectToolWindow)
