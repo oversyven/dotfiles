@@ -34,5 +34,3 @@ vim.opt.splitright = true
 
 -- 系统剪贴板
 vim.opt.clipboard:append("unnamedplus")
-
-
