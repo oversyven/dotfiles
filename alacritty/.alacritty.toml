@@ -1,5 +1,3 @@
-
-
 [[colors.indexed_colors]]
 color = "#fe8019"
 index = 16
@@ -72,7 +70,7 @@ mods = "Alt"
 history = 100
 
 [window]
-decorations = "none"
+# decorations = "none"
 opacity = 0.95
 
 [selection]
@@ -80,4 +78,3 @@ save_to_clipboard = true
 
 [shell]
 program = "/usr/local/bin/fish"
-
