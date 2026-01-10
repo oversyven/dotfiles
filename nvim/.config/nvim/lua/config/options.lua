@@ -20,7 +20,7 @@ opt.wrap = false -- disable line wrap
 
 
 -- 拼写检查
-opt.spell = true
+opt.spell = false
 opt.spelllang = { "en", "cjk" } -- 英文和汉字
 opt.spelloptions = "camel" -- 允许驼峰
 
